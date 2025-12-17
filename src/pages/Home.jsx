@@ -9,24 +9,28 @@ import NewVideos from '../Components/NewVideos';
 import PopularVideos from '../Components/PopularVideos';
 import PopularChannels from '../Components/PopularChannels';
 import Sidebar from '../Components/Sidebar';
+import Footer from '../Components/Footer';
 
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <Header onMenuClick={() => setSidebarOpen(true)} />
         <SubHeader />
       </div>
-      <Hero />
-      <Benefits />
-      <FeaturedVideos />
-      <SubscriptionUpdates />
-      <NewVideos />
-      <PopularVideos />
-      <PopularChannels />
+      <div className="flex-grow">
+        <Hero />
+        <Benefits />
+        <FeaturedVideos />
+        <SubscriptionUpdates />
+        <NewVideos />
+        <PopularVideos />
+        <PopularChannels />
+      </div>
+      <Footer />
     </div>
   );
 };

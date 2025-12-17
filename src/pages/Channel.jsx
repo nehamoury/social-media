@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Check, Bell, Search, ChevronDown } from 'lucide-react';
+import { Check, Bell, Search, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import Header from '../Components/Header';
 import SubHeader from '../Components/SubHeader';
 import Sidebar from '../Components/Sidebar';
 import VideoCard from '../Components/VideoCard';
+import Footer from '../Components/Footer';
 
 export default function Channel() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -76,30 +77,44 @@ export default function Channel() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <Header onMenuClick={() => setSidebarOpen(true)} />
         <SubHeader />
       </div>
 
-      <main>
+      <main className="flex-grow">
         {/* Channel Banner */}
-        <div className="h-48 md:h-64 lg:h-80 w-full relative">
+        <div className="h-48 md:h-80 w-full relative group">
           <img
             src={channelInfo.banner}
             alt="Channel Banner"
             className="w-full h-full object-cover"
           />
-          {/* Social Links on Banner if needed */}
+          {/* Social Links Overlay */}
+          <div className="absolute top-4 right-4 flex gap-2">
+            <button className="bg-black/40 hover:bg-black/60 text-white p-2 rounded-full backdrop-blur-sm transition-colors">
+              <Facebook className="w-4 h-4" />
+            </button>
+            <button className="bg-black/40 hover:bg-black/60 text-white p-2 rounded-full backdrop-blur-sm transition-colors">
+              <Twitter className="w-4 h-4" />
+            </button>
+            <button className="bg-black/40 hover:bg-black/60 text-white p-2 rounded-full backdrop-blur-sm transition-colors">
+              <Instagram className="w-4 h-4" />
+            </button>
+            <button className="bg-black/40 hover:bg-black/60 text-white p-2 rounded-full backdrop-blur-sm transition-colors">
+              <Youtube className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Channel Info Section */}
         <div className="bg-gray-50 border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
+          <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-6">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               {/* Avatar */}
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-md overflow-hidden flex-shrink-0 -mt-4 md:-mt-8 relative z-10">
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-md overflow-hidden flex-shrink-0 -mt-12 md:-mt-16 relative z-10 bg-white">
                 <img
                   src={channelInfo.avatar}
                   alt={channelInfo.name}
@@ -108,54 +123,58 @@ export default function Channel() {
               </div>
 
               {/* Info */}
-              <div className="flex-1 text-center md:text-left">
-                <div className="flex flex-col md:flex-row items-center md:items-center gap-2 md:gap-4 mb-2">
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
+              <div className="flex-1 text-center md:text-left mt-2 md:mt-0">
+                <div className="flex flex-col md:flex-row items-center md:items-center gap-2 mb-1">
+                  <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                     {channelInfo.name}
-                    <span className="bg-gray-200 p-1 rounded-full">
-                      <Check className="w-3 h-3 text-gray-600" />
+                    <span className="bg-blue-500 rounded-full p-0.5" title="Verified">
+                      <Check className="w-3 h-3 text-white" />
                     </span>
                   </h1>
                 </div>
 
-                <div className="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1 text-gray-600 text-sm mb-4">
+                <div className="flex flex-wrap justify-center md:justify-start gap-2 text-sm text-gray-500 font-medium mb-3">
                   <span>{channelInfo.subscribers} subscribers</span>
                   <span>•</span>
                   <span>{channelInfo.videoCount} videos</span>
+                  <span>•</span>
+                  <span>48M views</span>
                 </div>
 
-                <p className="text-gray-600 max-w-2xl text-sm md:text-base">
+                <p className="text-gray-500 max-w-2xl text-sm leading-relaxed mb-4 line-clamp-2 md:line-clamp-1">
                   {channelInfo.description}
                 </p>
               </div>
 
-              {/* Action Button */}
-              <div className="flex items-center gap-4 mt-4 md:mt-2">
-                <button className="bg-black text-white px-8 py-2.5 rounded-full font-medium hover:bg-gray-900 transition-colors">
+              {/* Action Buttons */}
+              <div className="flex items-center gap-3 mt-4 md:mt-2">
+                <button className="bg-[#cc0000] hover:bg-[#b20000] text-white px-6 py-2.5 rounded shadow-sm font-semibold uppercase text-sm tracking-wide transition-colors">
                   Subscribe
                 </button>
-                <button className="p-2.5 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors">
-                  <Bell className="w-5 h-5 text-gray-700" />
+                <button className="p-2.5 border border-gray-300 bg-white rounded-full hover:bg-gray-50 text-gray-600 transition-colors shadow-sm">
+                  <Bell className="w-5 h-5" />
                 </button>
               </div>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="max-w-7xl mx-auto px-4 md:px-6">
-            <div className="flex items-center gap-8 overflow-x-auto">
-              {['HOME', 'VIDEOS', 'PLAYLISTS', 'COMMUNITY', 'CHANNELS', 'ABOUT'].map((tab, index) => (
-                <button
-                  key={index}
-                  className={`py-4 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${index === 0
-                    ? 'border-gray-900 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                    }`}
-                >
-                  {tab}
-                </button>
-              ))}
-              <button className="py-4 text-gray-500 hover:text-gray-700">
+          <div className="max-w-[1600px] mx-auto px-4 md:px-8 mt-2">
+            <div className="flex items-center justify-between border-b border-gray-200">
+              <div className="flex items-center gap-8 overflow-x-auto no-scrollbar">
+                {['HOME', 'VIDEOS', 'PLAYLISTS', 'COMMUNITY', 'CHANNELS', 'ABOUT'].map((tab, index) => (
+                  <button
+                    key={index}
+                    className={`py-3 text-sm font-bold border-b-[3px] transition-colors whitespace-nowrap px-1 ${index === 0
+                      ? 'border-[#cc0000] text-[#cc0000]'
+                      : 'border-transparent text-gray-500 hover:text-gray-800'
+                      }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+              <button className="p-2 text-gray-500 hover:text-gray-700 hidden md:block">
                 <Search className="w-5 h-5" />
               </button>
             </div>
@@ -164,10 +183,15 @@ export default function Channel() {
 
         {/* Channel Content */}
         <div className="bg-white min-h-[500px]">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-6">Uploads</h2>
+          <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-8">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-bold text-gray-900">Uploads</h2>
+              <div className="flex gap-2">
+                {/* Filter buttons could go here */}
+              </div>
+            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
               {videos.map((video) => (
                 <VideoCard
                   key={video.id}
@@ -183,6 +207,7 @@ export default function Channel() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
