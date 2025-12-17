@@ -110,7 +110,7 @@ export default function Channel() {
         </div>
 
         {/* Channel Info Section */}
-        <div className="bg-gray-50 border-b border-gray-200">
+        <div className="bg-gray-50 dark:bg-[#0f0f0f] border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
           <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-6">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               {/* Avatar */}
