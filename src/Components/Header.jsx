@@ -1,10 +1,30 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, MessageSquare, Bell, Upload, ChevronDown, User, CreditCard, Settings, LogOut, Moon, Globe, HelpCircle, MapPin, Shield } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = ({ onMenuClick }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const profileRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Load user from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Failed to parse user data", e);
+      }
+    }
+  }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -87,7 +107,7 @@ const Header = ({ onMenuClick }) => {
           >
             <img
               src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1887&auto=format&fit=crop"
-              alt="User"
+              alt={user?.username || "User"}
               className="w-8 h-8 rounded-full object-cover border border-gray-200"
             />
             <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
@@ -98,13 +118,15 @@ const Header = ({ onMenuClick }) => {
             <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
               {/* User Header */}
               <div className="px-4 py-3 border-b flex items-center justify-between">
-                <span className="font-semibold text-gray-900">AZYRUSMAX</span>
+                <span className="font-semibold text-gray-900 truncate pr-2">
+                  {user?.username || user?.email || 'Guest User'}
+                </span>
                 <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded font-bold">PRO</span>
               </div>
 
               {/* Menu Links */}
               <div className="py-2 border-b">
-                <Link to="/channel/azyrusmax" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-gray-700 hover:text-gray-900 transition-colors">
+                <Link to={`/channel/${user?.username || 'user'}`} className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-gray-700 hover:text-gray-900 transition-colors">
                   <User className="w-5 h-5 text-gray-500" />
                   <span className="text-sm font-medium">My Channel</span>
                 </Link>
@@ -116,7 +138,10 @@ const Header = ({ onMenuClick }) => {
                   <Settings className="w-5 h-5 text-gray-500" />
                   <span className="text-sm font-medium">Settings</span>
                 </Link>
-                <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-gray-700 hover:text-gray-900 transition-colors text-left">
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-gray-700 hover:text-gray-900 transition-colors text-left"
+                >
                   <LogOut className="w-5 h-5 text-gray-500" />
                   <span className="text-sm font-medium">Sign out</span>
                 </button>

@@ -1,27 +1,55 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import apiClient from '../services/api';
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      setError('Passwords do not match!');
       return;
     }
-    console.log('Signup attempt:', formData);
-    alert('Account created successfully!');
+
+    setLoading(true);
+    try {
+      const response = await apiClient.signup({
+        email: formData.email,
+        password: formData.password,
+        username: formData.username,
+        fullName: formData.name
+      });
+
+      if (response.token) {
+        // Store token in localStorage
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+
+        // Redirect to home page
+        navigate('/');
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to create account. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +69,12 @@ export default function Signup() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
@@ -50,6 +84,19 @@ export default function Signup() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="John Doe"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all bg-gray-50"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Username</label>
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="johndoe"
                 className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all bg-gray-50"
                 required
               />
@@ -94,8 +141,12 @@ export default function Signup() {
               />
             </div>
 
-            <button type="submit" className="w-full px-4 py-3 bg-[#cc0000] text-white rounded-lg hover:bg-[#b30000] font-bold text-sm transition-colors shadow-sm tracking-wide uppercase">
-              Sign Up
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full px-4 py-3 bg-[#cc0000] text-white rounded-lg hover:bg-[#b30000] font-bold text-sm transition-colors shadow-sm tracking-wide uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Creating Account...' : 'Sign Up'}
             </button>
           </form>
 

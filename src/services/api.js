@@ -1,5 +1,5 @@
 // API service for making HTTP requests
-const API_BASE_URL = 'https://api.example.com';
+const API_BASE_URL = 'http://localhost:5000/api';
 
 export const apiClient = {
   // Get all videos
@@ -73,7 +73,14 @@ export const apiClient = {
           'Content-Type': 'application/json',
         },
       });
-      return await response.json();
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to login');
+      }
+
+      return data;
     } catch (error) {
       console.error('Error logging in:', error);
       throw error;
@@ -90,7 +97,14 @@ export const apiClient = {
           'Content-Type': 'application/json',
         },
       });
-      return await response.json();
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || data.message || 'Failed to create account');
+      }
+
+      return data;
     } catch (error) {
       console.error('Error signing up:', error);
       throw error;
